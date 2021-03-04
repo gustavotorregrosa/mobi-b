@@ -1,0 +1,1 @@
+export const ATUALIZA_USUARIO = 'ATUALIZA_USUARIO'
