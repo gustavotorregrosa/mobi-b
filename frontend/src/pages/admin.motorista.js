@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import NavBar from '../components/index/navbar'
 import { connect } from 'react-redux'
 import Tabela from '../components/misc/tabela'
-import ModalCriaEdita from '../components/admin/passageiros/modalCriaEdita'
-import ModalDeleta from '../components/admin/passageiros/modalDelete'
+import ModalCriaEdita from '../components/admin/motoristas/modalCriaEdita'
+import ModalDeleta from '../components/admin/motoristas/modalDelete'
 import PassageiroContext from '../contexts/PassageiroContext'
 
 const MotoristaPage = props => {
@@ -31,7 +31,7 @@ const MotoristaPage = props => {
         },
     ]
 
-    const listaPassageiros = async () => {
+    const listaMotoristas = async () => {
         setLoading(true)
         const data = await passageiroService.getPassageiros()
         setData(data)
@@ -39,25 +39,25 @@ const MotoristaPage = props => {
     }
 
     useEffect(async () => {
-        await listaPassageiros()
+        await listaMotoristas()
     }, [])
 
     // const ativaLoading = l => setLoading(l)
 
     const openModalNew = ev => {
         ev.preventDefault()
-        const e = new CustomEvent('cria-passageiros')
+        const e = new CustomEvent('cria-motoristas')
         document.dispatchEvent(e)
     }
 
     return (<div>
         <NavBar />
         <div className="container">
-            <h4>Passageiros</h4>
+            <h4>Motoristas</h4>
             <a className="waves-effect right" onClick={e => openModalNew(e)}><i className="medium material-icons">add_box</i></a>
             <Tabela campos={campos} data={data} loading={loading} eventName="passageiros" />
-            <ModalCriaEdita listaPassageiros={() => listaPassageiros()} />
-            <ModalDeleta listaPassageiros={() => listaPassageiros()} />
+            <ModalCriaEdita listaMotoristas={() => listaMotoristas()} />
+            <ModalDeleta listaMotoristas={() => listaMotoristas()} />
         </div>
     </div>)
 }
