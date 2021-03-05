@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 
 const Tabela = props => {
 
@@ -12,7 +12,6 @@ const Tabela = props => {
         document.addEventListener('atualiza-tabela', () => {
             forceUpdate()
         })
-
 
         let mPaginacao = {
             min: 1,
@@ -56,9 +55,16 @@ const Tabela = props => {
     }
 
 
+    const dadosConsiderados = () => {
+        const inicio = (mPaginacao.current - 1) * numItensPorPag
+        const fim = mPaginacao.current * numItensPorPag -1
+
+        return data.filter((el, index) => index >= inicio && index <= fim)
+    }
+
 
     const geraItens = () => {
-        let itens = data.map(linha => {
+        let itens = dadosConsiderados().map(linha => {
             let item = campos.map(campo => {
                 if (campo.name == 'actions') {
                     return (<td>
@@ -71,10 +77,7 @@ const Tabela = props => {
             })
             return (<tr>{item}</tr>)
         })
-
         return (<tbody>{itens}</tbody>)
-
-
     }
 
     const loader = () => {
@@ -90,23 +93,36 @@ const Tabela = props => {
         return null
     }
 
+    const alteraPagina = (e, current) => {
+        e.preventDefault()
+        if(current > mPaginacao.max || current < 1){
+            return
+        }
+        let novosParametrosPaginacao = {
+            ...mPaginacao,
+            current
+        }
+        setmPaginacao(novosParametrosPaginacao)
+    }
+
     const geraPaginacao = () => {
 
-        let leftChev = (<li className="disabled"><a href="#!"><i className="material-icons">chevron_left</i></a></li>)
-        if(mPaginacao.current > 1){
-            leftChev = (<li className="waves-effect"><a href="#!"><i className="material-icons">chevron_left</i></a></li>)
+        let leftChev = (<li className="disabled"><a onClick={e => alteraPagina(e, mPaginacao.current-1)} href="#!"><i className="material-icons">chevron_left</i></a></li>)
+        if (mPaginacao.current > 1) {
+            leftChev = (<li className="waves-effect"><a onClick={e => alteraPagina(e, mPaginacao.current-1)} href="#!"><i className="material-icons">chevron_left</i></a></li>)
         }
 
-        let rightChev = (<li className="waves-effect"><a href="#!"><i className="material-icons">chevron_right</i></a></li>)
-        if(mPaginacao.current == mPaginacao.max){
-            rightChev = (<li className="disabled"><a href="#!"><i className="material-icons">chevron_right</i></a></li>)
+        let rightChev = (<li className="waves-effect"><a onClick={e => alteraPagina(e, mPaginacao.current+1)} href="#!"><i className="material-icons">chevron_right</i></a></li>)
+        if (mPaginacao.current == mPaginacao.max) {
+            rightChev = (<li className="disabled"><a onClick={e => alteraPagina(e, mPaginacao.current+1)} href="#!"><i className="material-icons">chevron_right</i></a></li>)
         }
+        
 
         let itensPaginacao = []
         for (let index = 1; index <= mPaginacao.max; ++index) {
-            let item = (<li className="waves-effect"><a href="#!">{index}</a></li>)
-            if(index == mPaginacao.current){
-                item = (<li className="active black"><a href="#!">{index}</a></li>)
+            let item = (<li className="waves-effect"><a href="#!" onClick={(e) => alteraPagina(e, index)}>{index}</a></li>)
+            if (index == mPaginacao.current) {
+                item = (<li className="active black"><a href="#!" onClick={(e) => alteraPagina(e, index)}>{index}</a></li>)
             }
             itensPaginacao.push(item)
         }
@@ -114,9 +130,9 @@ const Tabela = props => {
         return (<ul className="pagination">
             {leftChev}
             {itensPaginacao}
-            {rightChev}    
+            {rightChev}
         </ul>
-                      
+
         )
     }
 
@@ -124,7 +140,6 @@ const Tabela = props => {
         <table className="highlight responsive-table">
             {geraCabecalho()}
             {geraItens()}
-               
         </table>
         {loader()}
         {geraPaginacao()}
