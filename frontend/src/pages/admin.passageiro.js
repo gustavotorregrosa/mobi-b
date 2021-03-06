@@ -51,7 +51,7 @@ const PassageiroPage = props => {
     }
 
     return (<div>
-        <NavBar />
+        <NavBar {...props} />
         <div className="container">
             <h4>Passageiros</h4>
             <a className="waves-effect right" onClick={e => openModalNew(e)}><i className="medium material-icons">add_box</i></a>

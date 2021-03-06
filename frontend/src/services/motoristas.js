@@ -10,9 +10,9 @@ class MotoristaService extends Component {
     //     super(props)
     // }
 
-    getPassageiros = async () => {
+    getMotoristas = async () => {
         const params = {
-            url: '/motorista',
+            url: '/motoristas',
             method: 'get'
         }
 
@@ -38,7 +38,7 @@ class MotoristaService extends Component {
         return dataMotorista
     }
 
-    salvarMotorista = async (motorista) => {
+    salvaMotorista = async (motorista) => {
         let params = {
             url: '/motoristas',
             method: 'post',

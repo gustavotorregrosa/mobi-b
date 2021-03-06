@@ -1,11 +1,11 @@
 import React, {useRef, useEffect, useState, useContext} from 'react'
-import PassageiroContext from '../../../contexts/PassageiroContext'
+import MotoristaContext from '../../../contexts/MotoristaContext'
 import 'materialize-css/dist/css/materialize.min.css'
 import M from 'materialize-css'
 
 const ModalDelete = props => {
 
-    const passageiroService = useContext(PassageiroContext)
+    const motoristaService = useContext(MotoristaContext)
     
     const [id, setId] = useState('')
     const [nome, setNome] = useState('')
@@ -42,10 +42,10 @@ const ModalDelete = props => {
     const doDelete = async e => {
         e.preventDefault()
         setLoading(true)
-        await passageiroService.deletePassageiro({ id })
+        await motoristaService.deleteMotorista({ id })
         closeModal()
         setLoading(false)
-        await props.listaPassageiros()  
+        await props.listaMotoristas()  
     }
 
     const closeModal = () => {

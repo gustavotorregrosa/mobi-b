@@ -1,11 +1,11 @@
 import React, { useRef, useEffect, useState, useContext } from 'react'
-import PassageiroContext from '../../../contexts/PassageiroContext'
+import MotoristaContext from '../../../contexts/MotoristaContext'
 import 'materialize-css/dist/css/materialize.min.css'
 import M from 'materialize-css'
 
 const ModalCriaEdita = props => {
 
-    const passageiroService = useContext(PassageiroContext)
+    const motoristaService = useContext(MotoristaContext)
 
     const [id, setId] = useState(null)
     const [nome, setNome] = useState('')
@@ -71,10 +71,10 @@ const ModalCriaEdita = props => {
     const doSave = async e => {
         e.preventDefault()
         setLoading(true)
-        await passageiroService.salvarPassageiro({ id, nome, email, endereco })
+        await motoristaService.salvaMotorista({ id, nome, email, endereco })
         closeModal()
         setLoading(false)
-        await props.listaPassageiros()
+        await props.listaMotoristas()
     }
 
 

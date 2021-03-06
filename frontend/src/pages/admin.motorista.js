@@ -4,11 +4,11 @@ import { connect } from 'react-redux'
 import Tabela from '../components/misc/tabela'
 import ModalCriaEdita from '../components/admin/motoristas/modalCriaEdita'
 import ModalDeleta from '../components/admin/motoristas/modalDelete'
-import PassageiroContext from '../contexts/PassageiroContext'
+import MotoristaContext from '../contexts/MotoristaContext'
 
 const MotoristaPage = props => {
 
-    const passageiroService = useContext(PassageiroContext)
+    const motoristaService = useContext(MotoristaContext)
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
 
@@ -33,7 +33,7 @@ const MotoristaPage = props => {
 
     const listaMotoristas = async () => {
         setLoading(true)
-        const data = await passageiroService.getPassageiros()
+        const data = await motoristaService.getMotoristas()
         setData(data)
         setLoading(false)
     }
@@ -51,11 +51,11 @@ const MotoristaPage = props => {
     }
 
     return (<div>
-        <NavBar />
+        <NavBar {...props}/>
         <div className="container">
             <h4>Motoristas</h4>
             <a className="waves-effect right" onClick={e => openModalNew(e)}><i className="medium material-icons">add_box</i></a>
-            <Tabela campos={campos} data={data} loading={loading} eventName="passageiros" />
+            <Tabela campos={campos} data={data} loading={loading} eventName="motoristas" />
             <ModalCriaEdita listaMotoristas={() => listaMotoristas()} />
             <ModalDeleta listaMotoristas={() => listaMotoristas()} />
         </div>

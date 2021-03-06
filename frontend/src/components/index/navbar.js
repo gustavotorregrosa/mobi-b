@@ -14,7 +14,7 @@ const IndexNavbar = props => {
 
     const redirect = (e, pagina) => {
         e.preventDefault()
-        props?.history?.push('admin/' + pagina)
+        props?.history?.push('/admin/' + pagina)
     }
 
     return (<div>
@@ -24,7 +24,7 @@ const IndexNavbar = props => {
                 <a href="#" data-target="mobile-demo" className="sidenav-trigger"><i className="material-icons">menu</i></a>
                 <ul id="nav-mobile" className="right hide-on-med-and-down">
                     <li><a href="#" onClick={e => redirect(e, 'passageiros')}>Passageiros</a></li>
-                    <li><a href="#">Motoristas</a></li>
+                    <li><a href="#" onClick={e => redirect(e, 'motoristas')}>Motoristas</a></li>
                     <li><a href="#">Agendamentos</a></li>
                 </ul>
             </div>
@@ -32,7 +32,7 @@ const IndexNavbar = props => {
 
         <ul ref={navBarMobile} className="sidenav" id="mobile-demo">
             <li><a href="#" onClick={e => redirect(e, 'passageiros')}>Passageiros</a></li>
-            <li><a href="#">Motoristas</a></li>
+            <li><a href="#" onClick={e => redirect(e, 'motoristas')}>Motoristas</a></li>
             <li><a href="#">Agendamentos</a></li>
         </ul>
 
