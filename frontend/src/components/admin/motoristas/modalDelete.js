@@ -12,10 +12,12 @@ const ModalDelete = props => {
     const [loading, setLoading] = useState(false)
 
     const modal = useRef(null)
-    let instance 
+    let instance = null
 
     useEffect(() => {
+        
         instance = M.Modal.init(modal.current, {})
+
         document.addEventListener('deleta-motoristas', e => {
             setId(e.detail.data._id)
             setNome(e.detail.data.nome)
@@ -35,6 +37,7 @@ const ModalDelete = props => {
     }
 
     const openModal = () => {
+        instance.close()
         instance.open()
         M.updateTextFields()
     }

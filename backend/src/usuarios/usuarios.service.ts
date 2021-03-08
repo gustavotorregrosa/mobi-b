@@ -1,9 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IAtualizaUsuario } from './dto/atualiza-usuario.dto';
 import { ICriaUsuario } from './dto/cria-usuario.dto';
-import { IVerificaUsuario } from './dto/atualiza-usuario.dto'
+import { IAtualizaUsuario } from './dto/atualiza-usuario.dto'
 import { Usuario } from './interfaces/usuario.interface';
 import bcrypt from 'bcryptjs';
 
@@ -19,7 +18,7 @@ export class UsuariosService {
         return await this.usuarioModel.find().exec()
     }
 
-    getUsuario = async ({email, senha}: IVerificaUsuario): Promise<Usuario> => {
+    getUsuario = async ({email, senha}: IAtualizaUsuario): Promise<Usuario> => {
         return await this.usuarioModel.findOne({ email }).exec()
     }
 

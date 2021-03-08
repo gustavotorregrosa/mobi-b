@@ -35,6 +35,7 @@ const ModalDelete = props => {
     }
 
     const openModal = () => {
+        instance.close()
         instance.open()
         M.updateTextFields()
     }
