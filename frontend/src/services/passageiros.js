@@ -44,7 +44,7 @@ class PassageiroService extends Component {
             url: '/passageiros/' + passageiro.id,
             method: 'delete'
         }
-        await this.espera(3000)
+        await this.espera(1000)
         let dataPassageiro = await this.http.doFetch(params)
         return dataPassageiro
     }
@@ -65,7 +65,7 @@ class PassageiroService extends Component {
         }
         
         let dataPassageiro = await this.http.doFetch(params)
-        await this.espera(3000)
+        await this.espera(1000)
 
         return dataPassageiro
     }

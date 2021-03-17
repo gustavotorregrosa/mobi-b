@@ -4,9 +4,27 @@ import { Model } from 'mongoose';
 import { ICriaUsuario } from './dto/cria-usuario.dto';
 import { IAtualizaUsuario } from './dto/atualiza-usuario.dto'
 import { Usuario } from './interfaces/usuario.interface';
-import bcrypt from 'bcryptjs';
+
+
+import { genSalt, hash } from 'bcryptjs';
 
 const HASH_ROUNDS = 10
+
+let usuarios = [
+    {
+        nome: 'Gustavo',
+        email: 'gustavo.torregrosa@gmail.com',
+        endereco: 'teste 123'
+    }
+]
+
+// interface Usuario {
+//     nome: string
+//     email: string
+//     // senha: string
+//     endereco: string
+// }
+
 
 @Injectable()
 export class UsuariosService {
@@ -15,16 +33,17 @@ export class UsuariosService {
     
     
     listaUsuarios = async (): Promise<Array<Usuario>> => {
+        // return await usuarios
         return await this.usuarioModel.find().exec()
     }
 
-    getUsuario = async ({email, senha}: IAtualizaUsuario): Promise<Usuario> => {
-        return await this.usuarioModel.findOne({ email }).exec()
-    }
+    // getUsuario = async ({email, senha}: IAtualizaUsuario): Promise<Usuario> => {
+    //     return await this.usuarioModel.findOne({ email }).exec()
+    // }
 
     // deletaUsuario = async (_id): Promise<Usuario> => {
 
-    //     const usuario = await this.usuarioModel.findOne({_id}).exec()
+    //     const usuario = await this.usuarioModel.findOne({_id}).exec()Usuario
     //     if(!usuario){
     //         throw new NotFoundException(`Usuario com id ${_id} não encontrado`)
     //     }
@@ -37,8 +56,11 @@ export class UsuariosService {
     // }
 
     addUsuario = async (usuarioDTO: ICriaUsuario): Promise<Usuario> => {
-        const salt = await bcrypt.genSalt(HASH_ROUNDS)
-        usuarioDTO.senha = await bcrypt.hash(usuarioDTO.senha, salt)
+        console.log(usuarioDTO)
+        const salt = await genSalt(HASH_ROUNDS)
+        usuarioDTO.senha = await hash(usuarioDTO.senha, salt)
+        // usuarios.push({...usuarioDTO})
+        // return await usuarioDTO as Usuario
         const usuarioCriado = new this.usuarioModel(usuarioDTO)
         return await usuarioCriado.save()
     }

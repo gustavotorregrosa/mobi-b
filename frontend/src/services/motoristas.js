@@ -33,7 +33,7 @@ class MotoristaService extends Component {
             url: '/motoristas/' + motorista.id,
             method: 'delete'
         }
-        await this.espera(3000)
+        await this.espera(1000)
         let dataMotorista = await this.http.doFetch(params)
         return dataMotorista
     }

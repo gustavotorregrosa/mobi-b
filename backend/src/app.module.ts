@@ -12,7 +12,8 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false }),
     PassageirosModule,
     MotoristasModule,
-    UsuariosModule],
+    UsuariosModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
