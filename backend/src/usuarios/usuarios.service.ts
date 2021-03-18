@@ -39,7 +39,7 @@ export class UsuariosService {
         const usuarioCriado = new this.usuarioModel(usuarioDTO) as Usuario & {senha:string}
         await usuarioCriado.save()
 
-        let usuarioSafe = {
+        let usuarioSafe: any = {
             ...usuarioCriado.toJSON()
         }
         delete usuarioSafe.senha
@@ -50,15 +50,9 @@ export class UsuariosService {
             ...usuarioSafe,
             jwt,
             refreshToken
-        }
+        } as UsuarioJWT
 
-
-
-
-
-
-
-        // return usuarioSafe as UsuarioJWT
+        return usuarioSafe
 
     }
     
