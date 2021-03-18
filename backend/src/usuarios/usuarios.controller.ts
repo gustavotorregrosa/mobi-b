@@ -17,13 +17,13 @@ export class UsuariosController {
     }
 
     @Post('/salvar')
-    async salvarUsuario(@Body() usuario: ICriaUsuario): Promise<Usuario>{
+    async salvarUsuario(@Body() usuario: ICriaUsuario): Promise<UsuarioJWT>{
         return await this.usuariosService.addUsuario(usuario)
     }
     
     @Post()
-    async autenticarUsuario(@Body() usuario: IVerificaUsuario): Promise<UsuarioJWT>{
-        // return await this.usuariosService.addUsuario(usuario)
+    async autenticarUsuario(@Body() usuario: IVerificaUsuario): Promise<UsuarioJWT | void>{
+        return await this.usuariosService.autenticaUsuario(usuario)
     }
 
 

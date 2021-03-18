@@ -49,14 +49,23 @@ export class UsuariosService {
 
     // }
 
-    addUsuario = async (usuarioDTO: ICriaUsuario): Promise<Usuario> => {
+    addUsuario = async (usuarioDTO: ICriaUsuario): Promise<UsuarioJWT> => {
         console.log(usuarioDTO)
         const salt = await genSalt(HASH_ROUNDS)
         usuarioDTO.senha = await hash(usuarioDTO.senha, salt)
-        // usuarios.push({...usuarioDTO})
-        // return await usuarioDTO as Usuario
-        const usuarioCriado = new this.usuarioModel(usuarioDTO)
-        return await usuarioCriado.save()
+        const usuarioCriado = new this.usuarioModel(usuarioDTO) as Usuario & {senha:string}
+        await usuarioCriado.save()
+
+        let usuarioSafe: UsuarioJWT & {senha: string} = {
+            ...usuarioCriado.toJSON(),
+            jwt: '123',
+            refreshToken: 'abc'
+        }
+        
+        delete usuarioSafe.senha
+
+        return usuarioSafe as UsuarioJWT
+
     }
 
     // atualizaUsuario = async (_id, usuarioDTO: IAtualizaUsuario) => {
