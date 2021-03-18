@@ -5,6 +5,7 @@ import { PassageirosModule } from './passageiros/passageiros.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MotoristasModule } from './motoristas/motoristas.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
+import { AutenticacaoModule } from './autenticacao/autenticacao.module';
 
 @Module({
   imports: [
@@ -12,7 +13,9 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false }),
     PassageirosModule,
     MotoristasModule,
-    UsuariosModule
+    UsuariosModule,
+    AutenticacaoModule
+
   ],
   controllers: [AppController],
   providers: [AppService],

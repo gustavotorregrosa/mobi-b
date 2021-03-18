@@ -7,17 +7,16 @@ import { Usuario } from './interfaces/usuario.interface';
 import { genSalt, hash, compare } from 'bcryptjs';
 import { UsuarioJWT } from './interfaces/usuarioJWT.interface';
 import { IVerificaUsuario } from './dto/verifica-usuario.dto';
+import { AutenticacaoService } from 'src/autenticacao/autenticacao.service';
 
 const HASH_ROUNDS = 10
 
 @Injectable()
 export class UsuariosService {
 
-    constructor(@InjectModel('Usuario') private readonly usuarioModel: Model<Usuario>){}
+    constructor(@InjectModel('Usuario') private readonly usuarioModel: Model<Usuario>, private readonly autenticacaoService: AutenticacaoService){}
     
     listaUsuarios = async (): Promise<Array<Usuario>> => {
-        // return await usuarios
-        // select('+senha')
         return await this.usuarioModel.find().exec()
     }
 
@@ -31,23 +30,7 @@ export class UsuariosService {
         
     }
 
-    // getUsuario = async ({email, senha}: IAtualizaUsuario): Promise<Usuario> => {
-    //     return await this.usuarioModel.findOne({ email }).exec()
-    // }
 
-    // deletaUsuario = async (_id): Promise<Usuario> => {
-
-    //     const usuario = await this.usuarioModel.findOne({_id}).exec()Usuario
-    //     if(!usuario){
-    //         throw new NotFoundException(`Usuario com id ${_id} não encontrado`)
-    //     }
-
-    //     await this.usuarioModel.deleteOne({_id}).exec();
-
-    //     return usuario
-
-
-    // }
 
     addUsuario = async (usuarioDTO: ICriaUsuario): Promise<UsuarioJWT> => {
         console.log(usuarioDTO)
@@ -56,31 +39,28 @@ export class UsuariosService {
         const usuarioCriado = new this.usuarioModel(usuarioDTO) as Usuario & {senha:string}
         await usuarioCriado.save()
 
-        let usuarioSafe: UsuarioJWT & {senha: string} = {
-            ...usuarioCriado.toJSON(),
-            jwt: '123',
-            refreshToken: 'abc'
+        let usuarioSafe = {
+            ...usuarioCriado.toJSON()
         }
-        
         delete usuarioSafe.senha
 
-        return usuarioSafe as UsuarioJWT
+        const {jwt, refreshToken} = this.autenticacaoService.gerarTokens()
+
+        usuarioSafe = {
+            ...usuarioSafe,
+            jwt,
+            refreshToken
+        }
+
+
+
+
+
+
+
+        // return usuarioSafe as UsuarioJWT
 
     }
-
-    // atualizaUsuario = async (_id, usuarioDTO: IAtualizaUsuario) => {
-
-    //     const usuarioEncontrado = await this.usuarioModel.findOne({_id}).exec()
-
-    //     if (!usuarioEncontrado) {
-    //         throw new NotFoundException(`Usuario com id ${_id} não econtrado`)
-    //     }
-
-    //     return await this.usuarioModel.findOneAndUpdate({_id}, 
-    //         {$set: usuarioDTO}).exec()
-
-    // }
-
     
 
 }
