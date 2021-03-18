@@ -4,37 +4,31 @@ import { Model } from 'mongoose';
 import { ICriaUsuario } from './dto/cria-usuario.dto';
 import { IAtualizaUsuario } from './dto/atualiza-usuario.dto'
 import { Usuario } from './interfaces/usuario.interface';
-
-
-import { genSalt, hash } from 'bcryptjs';
+import { genSalt, hash, compare } from 'bcryptjs';
+import { UsuarioJWT } from './interfaces/usuarioJWT.interface';
+import { IVerificaUsuario } from './dto/verifica-usuario.dto';
 
 const HASH_ROUNDS = 10
-
-let usuarios = [
-    {
-        nome: 'Gustavo',
-        email: 'gustavo.torregrosa@gmail.com',
-        endereco: 'teste 123'
-    }
-]
-
-// interface Usuario {
-//     nome: string
-//     email: string
-//     // senha: string
-//     endereco: string
-// }
-
 
 @Injectable()
 export class UsuariosService {
 
     constructor(@InjectModel('Usuario') private readonly usuarioModel: Model<Usuario>){}
     
-    
     listaUsuarios = async (): Promise<Array<Usuario>> => {
         // return await usuarios
+        // select('+senha')
         return await this.usuarioModel.find().exec()
+    }
+
+
+    autenticaUsuario = async ({email, senha}: IVerificaUsuario):Promise<UsuarioJWT | void> => {
+        const usuario = await this.usuarioModel.findOne({email}).populate('+senha').exec() as Usuario & {senha: string} 
+        let comparacao = await compare(senha, usuario.senha)
+        if(!comparacao){
+            return
+        }
+        
     }
 
     // getUsuario = async ({email, senha}: IAtualizaUsuario): Promise<Usuario> => {
