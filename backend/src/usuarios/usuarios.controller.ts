@@ -23,6 +23,8 @@ export class UsuariosController {
     
     @Post()
     async autenticarUsuario(@Body() usuario: IVerificaUsuario): Promise<UsuarioJWT | void>{
+        console.log("ponto 1")
+        console.log(usuario)
         return await this.usuariosService.autenticaUsuario(usuario)
     }
 

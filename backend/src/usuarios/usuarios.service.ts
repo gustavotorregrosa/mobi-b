@@ -22,15 +22,39 @@ export class UsuariosService {
 
 
     autenticaUsuario = async ({email, senha}: IVerificaUsuario):Promise<UsuarioJWT | void> => {
-        const usuario = await this.usuarioModel.findOne({email}).populate('+senha').exec() as Usuario & {senha: string} 
-        let comparacao = await compare(senha, usuario.senha)
-        if(!comparacao){
-            return
-        }
+        console.log("ponto 2")
+        console.log(email)
+        console.log(senha)
         
+        let usuario = await this.usuarioModel.findOne({email}).select('+senha').exec() as Usuario
+        console.log(usuario)
+        // let senhaBanco = await this.usuarioModel.findOne({email}).populate('senha').exec()
+        
+        // as Usuario & {senha: string} 
+        console.log("ponto 3")
+        // console.log(senhaBanco)
+        
+        // let comparacao = await compare(senha, senhaBanco)
+        console.log("ponto 4")
+        // console.log(comparacao)
+        // if(!comparacao){
+        //     return
+        // }
+
+        const {id, nome, endereco } = usuario
+
+        const usuarioJWT: UsuarioJWT = {
+            id,
+            nome, 
+            email,
+            endereco,
+            jwt: 'teste jwt',
+            refreshToken: 'abc'
+        }
+
+        return usuarioJWT
+
     }
-
-
 
     addUsuario = async (usuarioDTO: ICriaUsuario): Promise<UsuarioJWT> => {
         console.log(usuarioDTO)

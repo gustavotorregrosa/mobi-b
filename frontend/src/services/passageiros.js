@@ -35,7 +35,7 @@ class PassageiroService extends Component {
             let passageiros = this.state.passageiros.filter(el => el.id != id)
             this.setState({ passageiros })
             success({ id, nome })
-        }, 3000)
+        }, 1000)
     })
 
 
