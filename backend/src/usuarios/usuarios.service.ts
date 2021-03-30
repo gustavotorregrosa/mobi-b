@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, now } from 'mongoose';
 import { ICriaUsuario } from './dto/cria-usuario.dto';
 import { IAtualizaUsuario } from './dto/atualiza-usuario.dto'
 import { Usuario } from './interfaces/usuario.interface';
@@ -8,6 +8,7 @@ import { genSalt, hash, compare } from 'bcryptjs';
 import { UsuarioJWT } from './interfaces/usuarioJWT.interface';
 import { IVerificaUsuario } from './dto/verifica-usuario.dto';
 import { AutenticacaoService } from 'src/autenticacao/autenticacao.service';
+import { UsuarioComChaves } from './interfaces/usuario-com-chaves.interface';
 
 const HASH_ROUNDS = 10
 
@@ -35,6 +36,8 @@ export class UsuariosService {
             nome, 
             email,
             endereco,
+            refreshToken: 'temp...',
+            refreshTokenValidity: new Date(),
             ...this.autenticacaoService.gerarTokens(usuario)
         }
 
@@ -43,10 +46,11 @@ export class UsuariosService {
     }
 
     addUsuario = async (usuarioDTO: ICriaUsuario): Promise<UsuarioJWT> => {
-        console.log(usuarioDTO)
         const salt = await genSalt(HASH_ROUNDS)
         usuarioDTO.senha = await hash(usuarioDTO.senha, salt)
-        const usuarioCriado = new this.usuarioModel(usuarioDTO) as Usuario & {senha:string}
+
+        const usuarioCriado = new this.usuarioModel({...usuarioDTO, refreshToken: this.autenticacaoService.createHash(), refreshTokenValidity: new Date()}) as Usuario & {senha:string}
+        
         await usuarioCriado.save()
 
         let usuarioSafe: any = {
@@ -54,12 +58,11 @@ export class UsuariosService {
         }
         delete usuarioSafe.senha
 
-        const {jwt, refreshToken} = this.autenticacaoService.gerarTokens()
+        const {jwt} = this.autenticacaoService.gerarTokens(usuarioCriado)
 
         usuarioSafe = {
             ...usuarioSafe,
-            jwt,
-            refreshToken
+            jwt
         } as UsuarioJWT
 
         return usuarioSafe

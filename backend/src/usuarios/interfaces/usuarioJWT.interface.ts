@@ -7,6 +7,7 @@ export interface UsuarioJWT
     email: string;
     endereco: string;
     jwt: string,
-    refreshToken: string
+    refreshToken: string,
+    refreshTokenValidity: Date
 
 }

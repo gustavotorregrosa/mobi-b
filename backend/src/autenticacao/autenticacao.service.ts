@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { sign } from 'jsonwebtoken'
+import { createHash } from 'crypto'
 
 @Injectable()
 export class AutenticacaoService {
 
     gerarTokens = ({ id, nome, email }) => {
+        let jwt = sign({id, nome, email}, 'gustavo')
         return {
-            jwt: '123456789',
-            refreshToken: 'abcdefg'
+            jwt
         }
     }
+
+    createHash = () => createHash('sha1').update(
+        (new Date()).valueOf().toString() + Math.random().toString()
+    ).digest('hex')
 }
