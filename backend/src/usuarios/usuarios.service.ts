@@ -23,21 +23,29 @@ export class UsuariosService {
 
 
     autenticaUsuario = async ({email, senha}: IVerificaUsuario):Promise<UsuarioJWT | void> => {
-        let usuario = await this.usuarioModel.findOne({email}).select('+senha').exec() as Usuario & {senha: string}
+        let usuario = await this.usuarioModel.findOne({email}).select('+senha').select('+refreshTokenValidity').select('+refreshToken').exec() as UsuarioComChaves & {senha: string }
         let comparacao = await compare(senha, usuario.senha)
         if(!comparacao){
             return
         }
 
-        const {id, nome, endereco } = usuario
+        usuario.refreshToken = this.autenticacaoService.createHash()
+
+        let refreshTokenValidity = new Date()
+        refreshTokenValidity.setHours(refreshTokenValidity.getHours() + 2)
+        usuario.refreshTokenValidity = refreshTokenValidity
+
+        usuario.save()
+
+        const {id, nome, endereco, refreshToken } = usuario
 
         const usuarioJWT: UsuarioJWT = {
             id,
             nome, 
             email,
             endereco,
-            refreshToken: 'temp...',
-            refreshTokenValidity: new Date(),
+            refreshToken,
+            refreshTokenValidity,
             ...this.autenticacaoService.gerarTokens(usuario)
         }
 
@@ -49,7 +57,10 @@ export class UsuariosService {
         const salt = await genSalt(HASH_ROUNDS)
         usuarioDTO.senha = await hash(usuarioDTO.senha, salt)
 
-        const usuarioCriado = new this.usuarioModel({...usuarioDTO, refreshToken: this.autenticacaoService.createHash(), refreshTokenValidity: new Date()}) as Usuario & {senha:string}
+        let refreshTokenValidity = new Date()
+        refreshTokenValidity.setHours(refreshTokenValidity.getHours() + 2)
+
+        const usuarioCriado = new this.usuarioModel({...usuarioDTO, refreshToken: this.autenticacaoService.createHash(), refreshTokenValidity}) as Usuario & {senha:string}
         
         await usuarioCriado.save()
 
