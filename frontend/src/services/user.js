@@ -12,7 +12,7 @@ class UserService extends Component {
 
     alteraUsuario = usuario => {
         store.dispatch(actions.atualizaUsuario(usuario))
-        // localStorage.setItem('usuario', JSON.parse(usuario))
+        localStorage.setItem('usuario', JSON.stringify(usuario))
     }
 
     logout = () => {
@@ -20,22 +20,24 @@ class UserService extends Component {
         localStorage.removeItem('usuario')
     }
 
-    login = usuario => {
-
-        let _usuario = {
-            nome: 'gustavo',
-            email: 'gustavo.torregrosa@gmail.com',
-            perfil: 'admin'
+    runFirstCheck = () => {
+        let usuario = JSON.parse(localStorage.getItem('usuario'))
+        if(usuario){
+            this.login(usuario)
         }
-
-        this.alteraUsuario(_usuario)
-        this.props.history.push(_usuario.perfil)
     }
 
+    login = usuario => {
+        this.alteraUsuario(usuario)
+        // this.props.history.push(usuario.perfil)
+        this.props.history.push('/admin')
+    }
 
     getUsuario = () => store.getState().autenticacao.usuario ?? {}
 
     getRefreshToken = () => this.getUsuario().refreshToken
+
+    getEmail = () => this.getUsuario().email
 
     getJwt = () => this.getUsuario().jwt
 

@@ -15,7 +15,7 @@ const Tabela = props => {
 
         let mPaginacao = {
             min: 1,
-            max: Math.ceil(data.length / numItensPorPag),
+            max: data ? Math.ceil(data.length / numItensPorPag) : 1,
             current: 1
         }
 
@@ -59,6 +59,9 @@ const Tabela = props => {
         const inicio = (mPaginacao.current - 1) * numItensPorPag
         const fim = mPaginacao.current * numItensPorPag -1
 
+        if(!data){
+            return []
+        }
         return data.filter((el, index) => index >= inicio && index <= fim)
     }
 

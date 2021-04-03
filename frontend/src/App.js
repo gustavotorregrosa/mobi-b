@@ -24,9 +24,17 @@ function App(props) {
   motoristaService.setHttp(httpService)
 
   useEffect(() => {
-    if (!userService.getUsuario().email) {
-      props.history.push('/login')
-    }
+
+    userService.runFirstCheck()
+
+    setTimeout(() => {
+      if (!userService.getUsuario().email) {
+        props.history.push('/login')
+      }else{
+        props.history.push('/admin')
+      }
+    }, 50)
+
   }, [])
 
   return (<div>

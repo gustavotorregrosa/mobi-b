@@ -1,11 +1,13 @@
 import React, {useRef, useEffect, useState, useContext} from 'react'
 import UserContext from '../../contexts/UserContext'
+import HttpContext from '../../contexts/HttpContext'
 import 'materialize-css/dist/css/materialize.min.css'
 import M from 'materialize-css'
 
 const RegisterModal = props => {
     
     const user = useContext(UserContext)
+    const http = useContext(HttpContext)
 
     const [nome, setNome] = useState('')
     const [email, setEmail] = useState('')
@@ -26,10 +28,9 @@ const RegisterModal = props => {
         M.updateTextFields()
     }
 
-    const doLogin = e => {
+    const doRegister = e => {
         e.preventDefault()
-        user.login({email, senha: 'senha'})
-        
+        http.registerUser({name: 'gustavo torregrosa', email: 'gustavo.torregrosa@gmail.com', password: 'gustavo01'})
     }
 
     const changeEmail = e => {
@@ -45,7 +46,7 @@ const RegisterModal = props => {
     }
 
     const changeConfirmacao = e => {
-        setConfirmacao(e.taget.value)
+        setConfirmacao(e.target.value)
     }
 
     return (<div>
@@ -75,7 +76,7 @@ const RegisterModal = props => {
                 </div>
             </div>
             <div className="modal-footer">
-                <a href="#" onClick={e => doLogin(e)} className="modal-close waves-effect waves-green btn-flat">Login</a>
+                <a href="#" onClick={e => doRegister(e)} className="modal-close waves-effect waves-green btn-flat">Login</a>
             </div>
         </div>
     </div>)

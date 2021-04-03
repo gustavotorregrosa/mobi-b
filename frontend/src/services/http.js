@@ -8,13 +8,8 @@ class HttpService extends Component {
 
     user = null
 
-    // constructor(props){
-    //     super(props)
-    // }
-
     setUser = user => this.user = user
     apiUrl = 'http://localhost:4200'
-
 
     doFetch = async ({url, method, data}) => {
         let request = this.generateRequestObject(url, method, data)
@@ -43,11 +38,11 @@ class HttpService extends Component {
     _renewUser = () => {
         return new Promise(async (success, reject) => {
             const params = {
-                url: '/user/refresh',
+                url: '/usuarios/refresh',
                 method: 'post',
                 data: {
                   email: this.user.getEmail(),
-                  password: this.user.getRefreshToken()
+                  refreshToken: this.user.getRefreshToken()
                 }
             }
 
@@ -59,8 +54,6 @@ class HttpService extends Component {
             success(response)
         })
     }
-
-
 
     generateRequestObject = (url, method = 'get', data = {}) => {
         
@@ -85,9 +78,40 @@ class HttpService extends Component {
         return request
     }
 
+    loginUser = async ({email, password}) => {
+        const params = {
+            url: '/usuarios',
+            method: 'post',
+            data: {
+                email,
+                senha: password
+            }
+        }
+        
+        let newUser = await this.doFetch(params)
+        console.log(newUser)
+    }
+
+    registerUser = async ({name, email, password}) => {
+        const params = {
+            url: '/usuarios/salvar',
+            method: 'post',
+            data: {
+                nome:name,
+                email,
+                senha: password
+            }
+
+        }
+        
+        let newUser = await this.doFetch(params)
+        this.user.login(newUser)
+    }
+
     getJwt = () => this.user.getJwt()
 
-    setJwt = jwt => this.user.setJwt(jwt) 
+    setJwt = jwt => this.user.setJwt(jwt)
+
 
 }
 

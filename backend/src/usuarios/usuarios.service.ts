@@ -9,6 +9,7 @@ import { UsuarioJWT } from './interfaces/usuarioJWT.interface';
 import { IVerificaUsuario } from './dto/verifica-usuario.dto';
 import { AutenticacaoService } from 'src/autenticacao/autenticacao.service';
 import { UsuarioComChaves } from './interfaces/usuario-com-chaves.interface';
+import { IRefreshUsuario } from './dto/refresh-usuario.dto';
 
 const HASH_ROUNDS = 10
 
@@ -21,6 +22,30 @@ export class UsuariosService {
         return await this.usuarioModel.find().exec()
     }
 
+    private _autentica = async (usuario: any): Promise<UsuarioJWT> => {
+        usuario.refreshToken = this.autenticacaoService.createHash()
+
+        let refreshTokenValidity = new Date()
+        refreshTokenValidity.setHours(refreshTokenValidity.getHours() + 2)
+        usuario.refreshTokenValidity = refreshTokenValidity
+
+        usuario.save()
+
+        const {id, nome, email, endereco, refreshToken } = usuario
+
+        const usuarioJWT: UsuarioJWT = {
+            id,
+            nome, 
+            email,
+            endereco,
+            refreshToken,
+            refreshTokenValidity,
+            ...this.autenticacaoService.gerarTokens(usuario)
+        }
+
+        return usuarioJWT
+    }
+
 
     autenticaUsuario = async ({email, senha}: IVerificaUsuario):Promise<UsuarioJWT | void> => {
         let usuario = await this.usuarioModel.findOne({email}).select('+senha').select('+refreshTokenValidity').select('+refreshToken').exec() as UsuarioComChaves & {senha: string }
@@ -28,6 +53,8 @@ export class UsuariosService {
         if(!comparacao){
             return
         }
+
+        return await this._autentica(usuario)
 
         usuario.refreshToken = this.autenticacaoService.createHash()
 
@@ -80,5 +107,15 @@ export class UsuariosService {
 
     }
     
+    refreshUsuario = async ({email, refreshToken}: IRefreshUsuario): Promise<UsuarioJWT | void> => {
+        let usuario = await this.usuarioModel.findOne({email, refreshToken}).select('+refreshTokenValidity').select('+refreshToken').exec() as UsuarioComChaves
+        if(!usuario){
+            return
+        }
+
+        return await this._autentica(usuario)
+
+        
+    }
 
 }
