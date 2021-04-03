@@ -6,10 +6,6 @@ import store from '../redux/store'
 
 class UserService extends Component {
 
-    // constructor(props){
-    //     super(props)
-    // }
-
     alteraUsuario = usuario => {
         store.dispatch(actions.atualizaUsuario(usuario))
         localStorage.setItem('usuario', JSON.stringify(usuario))

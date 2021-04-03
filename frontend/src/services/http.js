@@ -89,7 +89,7 @@ class HttpService extends Component {
         }
         
         let newUser = await this.doFetch(params)
-        console.log(newUser)
+        this.user.login(newUser)
     }
 
     registerUser = async ({name, email, password}) => {

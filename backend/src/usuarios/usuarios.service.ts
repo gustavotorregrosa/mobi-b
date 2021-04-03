@@ -49,6 +49,10 @@ export class UsuariosService {
 
     autenticaUsuario = async ({email, senha}: IVerificaUsuario):Promise<UsuarioJWT | void> => {
         let usuario = await this.usuarioModel.findOne({email}).select('+senha').select('+refreshTokenValidity').select('+refreshToken').exec() as UsuarioComChaves & {senha: string }
+        if(!usuario){
+            return
+        }
+        
         let comparacao = await compare(senha, usuario.senha)
         if(!comparacao){
             return

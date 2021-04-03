@@ -10,6 +10,7 @@ const LoginModal = props => {
     const http = useContext(HttpContext)
 
     const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
     const modal = useRef(null)
     let instance 
@@ -27,14 +28,17 @@ const LoginModal = props => {
 
     const doLogin = async e => {
         e.preventDefault()
-        console.log("ponto 1")
 
-        // await user.login({email, senha: 'senha'})
+        await http.loginUser({email, password})
         
     }
 
     const changeEmail = e => {
         setEmail(e.target.value)
+    }
+
+    const changePassword = e => {
+        setPassword(e.target.value)
     }
 
     return (<div>
@@ -46,7 +50,7 @@ const LoginModal = props => {
                         <label htmlFor="name">Username</label>
                     </div>
                     <div className="input-field col s6">
-                        <input id="password" type="password" className="validate" />
+                        <input id="password" value={password} onChange={e => changePassword(e)} type="password" className="validate" />
                         <label htmlFor="password">Password</label>
                     </div>
                 </div>
